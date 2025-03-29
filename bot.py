@@ -9,8 +9,8 @@ from datetime import datetime
 import pytz
 
 # Данные для Telegram
-CHAT_ID = "2110364647"
-BOT_TOKEN = "8151764416:AAE0F-wPCFZDViO7b5BQV-q7YjBHz0n8izA"
+CHAT_ID = os.getenv("2110364647")  # Чат ID берется из переменных окружения Railway
+BOT_TOKEN = os.getenv("8151764416:AAE0F-wPCFZDViO7b5BQV-q7YjBHz0n8izA")  # Токен бота из Railway
 
 # URL страницы стрима
 URL = "https://www.donationalerts.com/r/amichkaplay"
@@ -20,6 +20,9 @@ moscow_tz = pytz.timezone("Europe/Moscow")
 
 def send_telegram_message(text):
     """Функция отправки сообщения в Telegram"""
+    if not BOT_TOKEN or not CHAT_ID:
+        print("Ошибка: не указан BOT_TOKEN или CHAT_ID")
+        return
     url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
     data = {"chat_id": CHAT_ID, "text": text}
     try:
@@ -30,27 +33,27 @@ def send_telegram_message(text):
 
 def check_stream():
     """Функция проверки стрима"""
-    # Получаем текущее время в Москве
     now = datetime.now(moscow_tz)
     current_hour = now.hour
     current_minute = now.minute
 
-    # Проверяем, попадает ли время в диапазон 10:00 - 22:45
     if not (10 <= current_hour < 22 or (current_hour == 22 and current_minute <= 45)):
         print("Сейчас не время проверки. Ждем следующего окна...")
         return
 
-    # Настраиваем Selenium
     options = webdriver.ChromeOptions()
-    options.add_argument("--headless")  # Запуск без окна браузера
+    options.add_argument("--headless")  # Без графического интерфейса
+    options.add_argument("--no-sandbox")  # Обход ограничений Railway
+    options.add_argument("--disable-dev-shm-usage")  # Меньше памяти
+    options.add_argument("--disable-gpu")  # Отключаем GPU
+
     driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
 
     try:
         print(f"[{now.strftime('%Y-%m-%d %H:%M:%S')}] Проверяю страницу {URL}...")
         driver.get(URL)
-        time.sleep(5)  # Ждем загрузки JavaScript
+        time.sleep(5)
 
-        # Проверяем, есть ли элемент, который указывает на то, что стример в эфире
         try:
             element = driver.find_element(By.CLASS_NAME, "channel-status.online")
             print("Стример в эфире!")
@@ -64,8 +67,7 @@ def check_stream():
     finally:
         driver.quit()
 
-# Запускаем проверку
-if __name__ == "__main__":
+if name == "__main__":
     while True:
         check_stream()
-        time.sleep(1000)  # Проверять каждые 30 минут (1800 секунд)
+        time.sleep(1000)  # Проверяем каждые 30 минут
