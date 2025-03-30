@@ -70,4 +70,4 @@ def check_stream():
 if __name__ == "__main__":
     while True:
         check_stream()
-        time.sleep(1000)  # Проверяем каждые 30 минут
+        time.sleep(1800)  # Проверяем каждые 30 минут
