@@ -13,7 +13,7 @@ BOT_TOKEN = "8151764416:AAE0F-wPCFZDViO7b5BQV-q7YjBHz0n8izA"  # Вставь н�
 CHAT_ID = "2110364647"  # Это твой Telegram chat ID (из /getUpdates)
 
 # URL страницы стрима
-URL = "https://www.donationalerts.com/r/9pasha"
+URL = "https://www.donationalerts.com/r/amichkaplay"
 
 # Часовой пояс Москвы
 moscow_tz = pytz.timezone("Europe/Moscow")
