@@ -1,19 +1,19 @@
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
-from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.by import By
+from webdriver_manager.chrome import ChromeDriverManager
 import os
 import time
 import requests
 from datetime import datetime
 import pytz
 
-# Данные для Telegram
-CHAT_ID = os.getenv("2110364647")  # Чат ID берется из переменных окружения Railway
-BOT_TOKEN = os.getenv("8151764416:AAE0F-wPCFZDViO7b5BQV-q7YjBHz0n8izA")  # Токен бота из Railway
+# === Настройки Telegram ===
+BOT_TOKEN = "8151764416:AAE0F-wPCFZDViO7b5BQV-q7YjBHz0n8izA"  # Вставь настоящий токен сюда
+CHAT_ID = "2110364647"  # Это твой Telegram chat ID (из /getUpdates)
 
 # URL страницы стрима
-URL = "https://www.donationalerts.com/r/amichkaplay"
+URL = "https://www.donationalerts.com/r/9pasha"
 
 # Часовой пояс Москвы
 moscow_tz = pytz.timezone("Europe/Moscow")
