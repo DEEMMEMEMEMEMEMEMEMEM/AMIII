@@ -39,7 +39,7 @@ def check_stream():
 
     if not (10 <= current_hour < 22 or (current_hour == 22 and current_minute <= 45)):
         print("Сейчас не время проверки. Ждем следующего окна...")
-        return
+        return False  # Проверка не прошла, продолжать цикл
 
     options = webdriver.ChromeOptions()
     options.add_argument("--headless")  # Без графического интерфейса
@@ -58,16 +58,25 @@ def check_stream():
             element = driver.find_element(By.CLASS_NAME, "channel-status.online")
             print("Стример в эфире!")
             send_telegram_message("Ами начала подготовку к стриму!")
+            return True  # Успешная проверка
+
         except:
             print("Ами пока что не готовится к стриму.")
+            return False  # Стримера нет
 
     except Exception as e:
         print(f"Ошибка: {e}")
+        return False  # Ошибка
 
     finally:
         driver.quit()
 
 if __name__ == "__main__":
     while True:
-        check_stream()
-        time.sleep(21600)  # Проверяем каждые 30 минут
+        successful_check = check_stream()
+        if successful_check:
+            print("Засыпаю на 6 часов после успешной проверки...")
+            time.sleep(21600)  # Засыпаем на 6 часов
+        else:
+            print("Следующая проверка через 30 минут.")
+            time.sleep(1800)  # Проверяем через 30 минут
